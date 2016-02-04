@@ -17,7 +17,6 @@ import java.util.UUID;
 
 public class BanManager {
 
-    //TODO doppelte eintrage
     public BanManager() {
         MySQL.createTable("banmanager_bans", "`id` int(11) NOT NULL AUTO_INCREMENT",
                 "  `banned_uuid` varchar(100) NOT NULL",

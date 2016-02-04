@@ -42,14 +42,10 @@ public class SocketReadThread implements Runnable {
                             switch (header) {
                                 case "SYSTEM":
                                     if (message.startsWith("CONNECT")) {
-                                        // server connected
                                         String name = message.split(" ")[1];
-
                                         connectedServers.put(name, socket);
                                     } else if (message.startsWith("DISCONNECT")) {
-                                        // server disconnected
                                         String name = message.split(" ")[1];
-
                                         connectedServers.remove(name);
                                     }
                                     break;
@@ -106,14 +102,14 @@ public class SocketReadThread implements Runnable {
                         default:
                             if (connectedServers.containsKey(target)) {
                                 PrintWriter out = new PrintWriter(connectedServers.get(target).getOutputStream(), true);
-                                out.print(header + ";" + message);
+                                out.print(header + "<>" + message);
                                 out.flush();
                                 out.close();
                             }
                             break;
                     }
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
             }
         } catch (IOException e) {
