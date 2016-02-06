@@ -1,7 +1,6 @@
-package de.flashbeatzz.bungeesystem.uuid_lib;
+package de.flashbeatzz.bungeesystem;
 
-import de.flashbeatzz.bungeesystem.MySQL;
-import net.md_5.bungee.api.event.PreLoginEvent;
+import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
@@ -12,9 +11,9 @@ import java.util.UUID;
 public class UUIDLibrary implements Listener {
 
     @EventHandler
-    public void onPreLogin(PreLoginEvent e) {
-        UUID uuid = e.getConnection().getUniqueId();
-        String name = e.getConnection().getName();
+    public void onPreLogin(PostLoginEvent e) {
+        UUID uuid = e.getPlayer().getUniqueId();
+        String name = e.getPlayer().getName();
         ResultSet rs = MySQL.query("SELECT * FROM `uuid_library` WHERE `uuid`='" + uuid.toString() + "';");
         try {
             if (rs != null && rs.next()) {
@@ -82,5 +81,9 @@ public class UUIDLibrary implements Listener {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static UUID getConsoleUUID() {
+        return new UUID(0L, 0L);
     }
 }

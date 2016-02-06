@@ -2,7 +2,7 @@ package de.flashbeatzz.bungeesystem.banmanager;
 
 import de.flashbeatzz.bungeesystem.Data;
 import de.flashbeatzz.bungeesystem.MySQL;
-import de.flashbeatzz.bungeesystem.uuid_lib.UUIDLibrary;
+import de.flashbeatzz.bungeesystem.UUIDLibrary;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -11,9 +11,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class BanManager {
 
@@ -35,7 +33,7 @@ public class BanManager {
 
     public static void warnPlayer(UUID uuid, UUID warner, String reason) {
         ProxiedPlayer p = BungeeCord.getInstance().getPlayer(uuid);
-        if(Objects.equals(warner.toString(), new UUID(0L, 0L).toString())) {
+        if(Objects.equals(warner.toString(), UUIDLibrary.getConsoleUUID().toString())) {
             if(UUIDLibrary.isRegistred(uuid)) {
                 MySQL.update("INSERT INTO `banmanager_warns` (`warned_uuid`, `warner_uuid`, `reason`) VALUES ('" + uuid.toString() + "', '" + warner.toString() + "', '" + reason + "');");
                 p.sendMessage(ChatMessageType.CHAT, new TextComponent(
@@ -61,7 +59,7 @@ public class BanManager {
 
     public static void kickPlayer(UUID player, UUID kicker, String reason) {
         ProxiedPlayer p = BungeeCord.getInstance().getPlayer(player);
-        if(kicker.toString().equals(new UUID(0L, 0L).toString())) {
+        if(kicker.toString().equals(UUIDLibrary.getConsoleUUID().toString())) {
             if (BungeeCord.getInstance().getPlayers().contains(p)) {
                 p.disconnect(new TextComponent(
                         "§cDu wurdest von §6SERVER§c vom Server gekickt! \n" +
@@ -87,8 +85,8 @@ public class BanManager {
     public static void tempBanPlayer(UUID player, UUID banner, String reason, String time) {
         ProxiedPlayer p = BungeeCord.getInstance().getPlayer(player);
         if(UUIDLibrary.isRegistred(player)) {
-            if (Objects.equals(banner.toString(), new UUID(0L, 0L).toString())) {
-                if (getBanType(player) == BanType.NOT_BANNED) {
+            if (Objects.equals(banner.toString(), UUIDLibrary.getConsoleUUID().toString())) {
+                if (getBanType(player) != BanType.PERMA_BANNED) {
                     MySQL.update("INSERT INTO `banmanager_bans` (`banned_uuid`, `banner_uuid`, `reason`, `ban_expires`, `permanent`) VALUES ('" + player.toString() + "', '" + banner.toString() + "', '" + reason + "', '" + new Timestamp(new Date().getTime() + parse(time)) + "', '0');");
                     if (BungeeCord.getInstance().getPlayers().contains(p)) {
                         p.disconnect(new TextComponent(
@@ -105,7 +103,7 @@ public class BanManager {
         }
         ProxiedPlayer p1 = BungeeCord.getInstance().getPlayer(banner);
         if(UUIDLibrary.isRegistred(player)) {
-            if (getBanType(player) == BanType.NOT_BANNED) {
+            if (getBanType(player) != BanType.PERMA_BANNED) {
                 MySQL.update("INSERT INTO `banmanager_bans` (`banned_uuid`, `banner_uuid`, `reason`, `ban_expires`, `permanent`) VALUES ('" + player.toString() + "', '" + banner.toString() + "', '" + reason + "', '" + new Timestamp(new Date().getTime() + parse(time)) + "', '0');");
                 if (BungeeCord.getInstance().getPlayers().contains(p)) {
                     p.disconnect(new TextComponent(
@@ -123,10 +121,10 @@ public class BanManager {
 
     public static void banPlayer(UUID player, UUID banner, String reason) {
         ProxiedPlayer p = BungeeCord.getInstance().getPlayer(player);
-        if(banner.toString().equals(new UUID(0L, 0L).toString())) {
+        if(banner.toString().equals(UUIDLibrary.getConsoleUUID().toString())) {
             if(UUIDLibrary.isRegistred(player)) {
                 if(getBanType(player) == BanType.NOT_BANNED) {
-                    MySQL.update("INSERT INTO `banmanager_bans` (`banned_uuid`, `banner_uuid`, `reason`, `ban_expires`, `permanent`) VALUES ('" + player.toString() + "', '" + banner.toString() + "', '" + reason + "', '" + new Timestamp(0) + "', '1');");
+                    MySQL.update("INSERT INTO `banmanager_bans` (`banned_uuid`, `banner_uuid`, `reason`, `ban_expires`, `permanent`) VALUES ('" + player.toString() + "', '" + banner.toString() + "', '" + reason + "', '" + new Timestamp(new Date().getTime()) + "', '1');");
                     if(BungeeCord.getInstance().getPlayers().contains(p)) {
                         p.disconnect(new TextComponent(
                                 "§cDu wurdest von §6SERVER §cpermanent gebannt! \n" +
@@ -143,7 +141,7 @@ public class BanManager {
             ProxiedPlayer p1 = BungeeCord.getInstance().getPlayer(banner);
             if(UUIDLibrary.isRegistred(player)) {
                 if(getBanType(player) == BanType.NOT_BANNED) {
-                    MySQL.update("INSERT INTO `banmanager_bans` (`banned_uuid`, `banner_uuid`, `reason`, `ban_expires`, `permanent`) VALUES ('" + player.toString() + "', '" + banner.toString() + "', '" + reason + "', '" + new Timestamp(0) + "', '1');");
+                    MySQL.update("INSERT INTO `banmanager_bans` (`banned_uuid`, `banner_uuid`, `reason`, `ban_expires`, `permanent`) VALUES ('" + player.toString() + "', '" + banner.toString() + "', '" + reason + "', '" + new Timestamp(new Date().getTime()) + "', '1');");
                     if(BungeeCord.getInstance().getPlayers().contains(p)) {
                         p.disconnect(new TextComponent(
                                 "§cDu wurdest von §6" + p1.getName() + " §cpermanent gebannt! \n" +
@@ -157,6 +155,96 @@ public class BanManager {
             }
             p1.sendMessage(new TextComponent("§8[§4BAN§8] §cDer Spieler §6" + p.getName() + "§c existiert nicht!"));
         }
+    }
+
+    public static void unbanPlayer(UUID player, UUID requester) {
+        if(getBanType(player) != BanType.NOT_BANNED) {
+            MySQL.query("DELETE * FROM `banmanager_bans` WHERE `banned_uuid`='" + player.toString() + "';");
+            if(Objects.equals(requester.toString(), UUIDLibrary.getConsoleUUID().toString())) {
+                Data.console.info("§8[§2UNBAN§8] §aDer Spieler §6" + UUIDLibrary.getNameToUUID(player) + " §awurde entbannt!");
+                return;
+            }
+            BungeeCord.getInstance().getPlayer(requester).sendMessage(new TextComponent("" +
+                    "§8[§2UNBAN§8] §aDer Spieler §6" + UUIDLibrary.getNameToUUID(player) + " §awurde entbannt!"));
+            return;
+        }
+        if(Objects.equals(requester.toString(), UUIDLibrary.getConsoleUUID().toString())) {
+            Data.console.info("§8[§4UNBAN§8] §aDer Spieler §6" + UUIDLibrary.getNameToUUID(player) + " §cist nicht gebannt!");
+            return;
+        }
+        BungeeCord.getInstance().getPlayer(requester).sendMessage(new TextComponent("" +
+                "§8[§4UNBAN§8] §cDer Spieler §6" + UUIDLibrary.getNameToUUID(player) + " §cist nicht gebannt!"));
+    }
+
+    public static void check(UUID checked, UUID checker) {
+        String banned = "§l✕";
+        String tempbanned = "§l✕";
+        String timeLeft = "§l/";
+        String warns = "§l/";
+
+        if(getBanType(checked) == BanType.PERMA_BANNED) {
+            banned = "§l✔";
+            ResultSet rs = MySQL.query("SELECT * FROM `banmanager_bans` WHERE `banned_uuid`='" + checked.toString() + "';");
+            try {
+                if(rs != null && rs.next()) {
+                    banned += " (von " + UUIDLibrary.getNameToUUID(UUID.fromString(rs.getString("banner_uuid"))) + ")";
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(getBanType(checked) == BanType.TEMP_BANNED) {
+            tempbanned = "§l✔";
+            long time = 0;
+
+            ResultSet rs = MySQL.query("SELECT * FROM `banmanager_bans` WHERE `banned_uuid`='" + checked.toString() + "';");
+            try {
+                if(rs != null && rs.next()) {
+                    time = rs.getTimestamp("ban_expires").getTime() - new Date().getTime();
+                    tempbanned += " (von " + UUIDLibrary.getNameToUUID(UUID.fromString(rs.getString("banner_uuid"))) + ")";
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            int days = (int) (time / (3600 * 24));
+            time -= days * 3600 * 24;
+            int hours = (int) (time / 3600);
+            time -= hours * 3600;
+            int min = (int) (time / 60);
+            time -= min * 60;
+            int sec = (int) (time);
+
+            timeLeft = days + " Tag(e) " + hours + " Stunde(n) " + min + " Minute(n) und " + sec + " Sekunde(n)";
+        }
+
+        if(getWarns(checked) != 0) {
+            warns = "";
+            HashMap<String, UUID> map = new HashMap<>();
+            ResultSet rs = MySQL.query("SELECT * FROM `banmanager_warns` WHERE `warned_uuid`='" + checked.toString() + "';");
+            try {
+                if(rs != null && rs.next()) {
+                    map.put(rs.getString("reason"), UUID.fromString(rs.getString("warner_uuid")));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            int counter = 1;
+            for(Map.Entry entry : map.entrySet()) {
+                warns += "\n   §d§l#" + counter + " (von " + UUIDLibrary.getNameToUUID((UUID)entry.getValue()) + "):§r §f" + entry.getKey();
+                counter++;
+            }
+        }
+
+        BungeeCord.getInstance().getPlayer(checker).sendMessage(new TextComponent(
+                "§8§l[]======>> §6§lCHECK - " + UUIDLibrary.getNameToUUID(checked) + " §8§l<<======[]\n" +
+                        "§dPermanent gebannt:  §f" + banned + "\n" +
+                        "§dTemporär gebannt:   §f" + tempbanned + "\n" +
+                        "§dVerbleibende Zeit:    §f" + timeLeft + "\n" +
+                        "§dVerwanungen:         §f" + warns + "\n" +
+                        "§8§l[]======>> §6§lCHECK - " + UUIDLibrary.getNameToUUID(checked) + " §8§l<<======[]"
+        ));
     }
 
     public static BanType getBanType(UUID player) {
@@ -179,7 +267,7 @@ public class BanManager {
     public static Integer getWarns(UUID player) {
         ResultSet rs = MySQL.query("SELECT COUNT(*) FROM `banmanager_warns` WHERE `warned_uuid`='" + player.toString() + "';");
         try {
-            return rs != null ? rs.getInt("COUNT(*)") : 0;
+            return rs != null && rs.next() ? rs.getInt("COUNT(*)") : 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
