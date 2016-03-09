@@ -36,6 +36,7 @@ public class BungeeSystem extends Plugin {
         System.out.println("Successfully started.");
 
         new BanManager();
+        new LevelSystem();
         getProxy().getPluginManager().registerListener(this, new PostLoginListener());
         getProxy().getPluginManager().registerListener(this, new UUIDLibrary());
     }

@@ -22,6 +22,7 @@ public class UUIDLibrary implements Listener {
                 }
             } else {
                 MySQL.update("INSERT INTO `uuid_library` (`uuid`, `name`) VALUES ('" + uuid.toString() + "', '" + name + "');");
+                MySQL.update("INSERT INTO `levelsystem` (`uuid`, `level`, `exp`) VALUES ('" + uuid.toString() + "', '1', '0');");
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

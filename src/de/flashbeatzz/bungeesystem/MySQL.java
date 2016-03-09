@@ -40,6 +40,16 @@ public class MySQL {
         }
     }
 
+    public static boolean execute(String query) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            return ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static void update(String query) {
         try {
             PreparedStatement ps = connection.prepareStatement(query);
