@@ -4,9 +4,14 @@ import de.flashbeatzz.bungeesystem.banmanager.BanManager;
 import de.flashbeatzz.bungeesystem.banmanager.PostLoginListener;
 import net.md_5.bungee.api.plugin.Plugin;
 
+import java.io.IOException;
+import java.net.Socket;
+
 public class BungeeSystem extends Plugin {
 
     private static BungeeSystem instance;
+
+    public Socket socket;
 
     public static BungeeSystem getInstance() {
         return instance;
@@ -31,9 +36,12 @@ public class BungeeSystem extends Plugin {
         Data.mySQL = new MySQL();
         Data.mySQL.openConnection();
 
-        System.out.println("Starting CommunicationSystem-Server ...");
-        getProxy().getScheduler().runAsync(this, new SocketReadThread());
-        System.out.println("Successfully started.");
+        try {
+            socket = new Socket("localhost", 19888);
+            getProxy().getScheduler().runAsync(this, new SocketReadThread());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         new BanManager();
         new LevelSystem();
