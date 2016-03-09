@@ -1,7 +1,5 @@
 package de.flashbeatzz.bungeesystem;
 
-import de.flashbeatzz.bungeesystem.banmanager.BanManager;
-import de.flashbeatzz.bungeesystem.banmanager.PostLoginListener;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public class BungeeSystem extends Plugin {
@@ -35,9 +33,7 @@ public class BungeeSystem extends Plugin {
         getProxy().getScheduler().runAsync(this, new SocketReadThread());
         System.out.println("Successfully started.");
 
-        new BanManager();
         new LevelSystem();
-        getProxy().getPluginManager().registerListener(this, new PostLoginListener());
         getProxy().getPluginManager().registerListener(this, new UUIDLibrary());
     }
 
