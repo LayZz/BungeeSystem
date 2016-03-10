@@ -41,6 +41,7 @@ public class BungeeSystem extends Plugin {
             e.printStackTrace();
         }
 
+        new GuildeSystem();
         new LevelSystem();
         getProxy().getPluginManager().registerListener(this, new UUIDLibrary());
     }
