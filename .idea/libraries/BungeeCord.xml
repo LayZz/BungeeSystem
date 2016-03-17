@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="BungeeCord">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../libs/BungeeCord.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../MC PLUGIN/jar libs/BungeeCord.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

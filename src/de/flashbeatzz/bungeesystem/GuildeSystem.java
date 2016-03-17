@@ -7,7 +7,7 @@ public class GuildeSystem {
                 "`id` INT NOT NULL AUTO_INCREMENT," +
                 "`name` VARCHAR(100) NOT NULL," +
                 "`money` DOUBLE NOT NULL," +
-                "PRIMARY KEY ('id')");
+                "PRIMARY KEY (`id`)");
     }
 
 }
