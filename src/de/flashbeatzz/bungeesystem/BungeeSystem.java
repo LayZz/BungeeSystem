@@ -5,7 +5,9 @@ import de.flashbeatzz.bungeesystem.banmanager.PostLoginListener;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class BungeeSystem extends Plugin {
 
@@ -38,6 +40,7 @@ public class BungeeSystem extends Plugin {
 
         try {
             socket = new Socket("localhost", 19888);
+            printWriter = new PrintWriter(socket.getOutputStream());
             getProxy().getScheduler().runAsync(this, new SocketReadThread());
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,6 +50,20 @@ public class BungeeSystem extends Plugin {
         new LevelSystem();
         getProxy().getPluginManager().registerListener(this, new PostLoginListener());
         getProxy().getPluginManager().registerListener(this, new UUIDLibrary());
+    }
+
+    public static void sendMessage(String target, String header, String message, boolean sendSelf) {
+        String fString = target + "/§§/" + header + "/§§/" + message + "/§§/" + (sendSelf ? "TRUE" : "FALSE");
+        printWriter.println(fString);
+        printWriter.flush();
+    }
+
+    private static PrintWriter printWriter;
+
+    public static void sendMessage(SocketTarget target, String header, String message, boolean sendSelf) {
+        String fString = target.get() + "/§§/" + header + "/§§/" + message + "/§§/" + (sendSelf ? "TRUE" : "FALSE");
+        printWriter.println(fString);
+        printWriter.flush();
     }
 
 }

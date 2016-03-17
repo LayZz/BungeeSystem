@@ -8,7 +8,7 @@ public class LevelSystem {
                 "`uuid` VARCHAR(100) NOT NULL," +
                 "`level` INT NOT NULL," +
                 "`exp` INT NOT NULL," +
-                "PRIMARY KEY ('id')");
+                "PRIMARY KEY (`id`)");
     }
 
 }
