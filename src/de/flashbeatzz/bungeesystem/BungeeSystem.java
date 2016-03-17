@@ -1,7 +1,5 @@
 package de.flashbeatzz.bungeesystem;
 
-import de.flashbeatzz.bungeesystem.banmanager.BanManager;
-import de.flashbeatzz.bungeesystem.banmanager.PostLoginListener;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.IOException;
@@ -46,9 +44,8 @@ public class BungeeSystem extends Plugin {
             e.printStackTrace();
         }
 
-        new BanManager();
+        new GuildeSystem();
         new LevelSystem();
-        getProxy().getPluginManager().registerListener(this, new PostLoginListener());
         getProxy().getPluginManager().registerListener(this, new UUIDLibrary());
     }
 
