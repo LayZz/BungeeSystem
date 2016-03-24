@@ -1,5 +1,6 @@
 package de.flashbeatzz.bungeesystem;
 
+import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.IOException;
@@ -32,7 +33,11 @@ public class BungeeSystem extends Plugin {
         Data.mysqlCfg.copyAndSave(true);
 
         Data.mySQL = new MySQL();
-        Data.mySQL.openConnection();
+        if(!Data.mySQL.openConnection()) {
+            BungeeCord.getInstance().stop("MySQL-Connection failed!");
+        }
+
+        createTables();
 
         try {
             socket = new Socket("localhost", 19888);
@@ -41,9 +46,30 @@ public class BungeeSystem extends Plugin {
             e.printStackTrace();
         }
 
-        new GuildeSystem();
-        new LevelSystem();
         getProxy().getPluginManager().registerListener(this, new UUIDLibrary());
+    }
+
+    public void createTables() {
+        MySQL.createTable("levelsystem", "" +
+                "`id` INT NOT NULL AUTO_INCREMENT," +
+                "`uuid` VARCHAR(100) NOT NULL," +
+                "`level` INT NOT NULL," +
+                "`exp` INT NOT NULL," +
+                "PRIMARY KEY ('id')");
+        MySQL.createTable("guildes", "" +
+                "`id` INT NOT NULL AUTO_INCREMENT," +
+                "`name` VARCHAR(100) NOT NULL," +
+                "`tag` VARCHAR(4) NOT NULL," +
+                "`founder_uuid` VARCHAR(100) NOT NULL," +
+                "`money` DOUBLE NOT NULL," +
+                "PRIMARY KEY ('id')");
+        MySQL.createTable("guilde_members", "" +
+                "`uuid` VARCHAR(100) NOT NULL," +
+                "`guilde_id` INT NOT NULL)");
+        MySQL.createTable("uuid_library", "`id` int(11) NOT NULL AUTO_INCREMENT",
+                "  `uuid` varchar(100) NOT NULL",
+                "  `name` varchar(50) NOT NULL",
+                "  PRIMARY KEY (`id`)");
     }
 
 }

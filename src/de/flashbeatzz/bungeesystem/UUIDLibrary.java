@@ -29,13 +29,6 @@ public class UUIDLibrary implements Listener {
         }
     }
 
-    public UUIDLibrary() {
-        MySQL.createTable("uuid_library", "`id` int(11) NOT NULL AUTO_INCREMENT",
-                "  `uuid` varchar(100) NOT NULL",
-                "  `name` varchar(50) NOT NULL",
-                "  PRIMARY KEY (`id`)");
-    }
-
     public static UUID getUUIDtoName(String name) {
         if(isRegistred(name)) {
             try {
