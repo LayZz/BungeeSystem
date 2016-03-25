@@ -6,7 +6,6 @@ import net.md_5.bungee.api.plugin.Plugin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class BungeeSystem extends Plugin {
 
@@ -53,8 +52,6 @@ public class BungeeSystem extends Plugin {
 
         sendMessage(SocketTarget.BUNGEECORD, "CONNECT", "BUNGEECORD", false);
 
-        new GuildeSystem();
-        new LevelSystem();
         getProxy().getPluginManager().registerListener(this, new UUIDLibrary());
     }
 
