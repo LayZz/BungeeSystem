@@ -1,8 +1,8 @@
 package de.flashbeatzz.bungeesystem;
 
-import de.flashbeatzz.bungeesystem.withelist.Withelist;
-import de.flashbeatzz.bungeesystem.withelist.WithelistListener;
-import de.flashbeatzz.bungeesystem.withelist.cmdWithelist;
+import de.flashbeatzz.bungeesystem.whitelist.Whitelist;
+import de.flashbeatzz.bungeesystem.whitelist.WhitelistListener;
+import de.flashbeatzz.bungeesystem.whitelist.cmdWhitelist;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -44,9 +44,9 @@ public class BungeeSystem extends Plugin {
         }
 
         createTables();
-        getProxy().getPluginManager().registerCommand(this, new cmdWithelist());
-        new Withelist();
-        getProxy().getPluginManager().registerListener(this, new WithelistListener());
+        getProxy().getPluginManager().registerCommand(this, new cmdWhitelist());
+        new Whitelist();
+        getProxy().getPluginManager().registerListener(this, new WhitelistListener());
 
         try {
             socket = new Socket("localhost", 19888);

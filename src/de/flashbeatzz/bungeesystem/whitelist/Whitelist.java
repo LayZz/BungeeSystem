@@ -1,4 +1,4 @@
-package de.flashbeatzz.bungeesystem.withelist;
+package de.flashbeatzz.bungeesystem.whitelist;
 
 import com.google.common.collect.Lists;
 import net.md_5.bungee.config.Configuration;
@@ -11,20 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Withelist {
+public class Whitelist {
     private static Configuration c;
     private static File f;
 
-    public Withelist() {
+    public Whitelist() {
         try {
-            f = new File("", "withelist.yml");
+            f = new File("", "whitelist.yml");
             if(!f.exists()) f.createNewFile();
             c = ConfigurationProvider.getProvider(YamlConfiguration.class).load(f);
             if(c.get("enabled") == null) {
                 c.set("enabled", false);
             }
             if(c.get("messsage") == null) {
-                c.set("message", "You are not withelisted.");
+                c.set("message", "You are not whitelisted.");
             }
             if(c.get("players") == null) {
                 c.set("players", Lists.newArrayList());
@@ -73,7 +73,7 @@ public class Withelist {
         return false;
     }
 
-    public static List<UUID> getWithelisted() {
+    public static List<UUID> getWhitelisted() {
         List<UUID> list = new ArrayList<>();
         for(String str : c.getStringList("players")) {
             list.add(UUID.fromString(str));
