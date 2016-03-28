@@ -17,7 +17,7 @@ public class Withelist {
 
     public Withelist() {
         try {
-            f = new File("plugins/BungeeSystem", "withelist.yml");
+            f = new File("", "withelist.yml");
             if(!f.exists()) f.createNewFile();
             c = ConfigurationProvider.getProvider(YamlConfiguration.class).load(f);
             if(c.get("enabled") == null) {

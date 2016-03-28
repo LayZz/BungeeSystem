@@ -43,16 +43,20 @@ public class cmdWithelist extends Command {
             }
         } else if(args.length >= 2) {
             if(args[0].equalsIgnoreCase("add")) {
-                if(Withelist.addPlayer(UUIDLibrary.getUUIDtoName(args[1]))) {
-                    cs.sendMessage(new TextComponent("You added " + args[1] + " to the withelist."));
-                } else {
-                    cs.sendMessage(new TextComponent(args[1] + " is already on the withelist."));
+                for(int i = 1; args[i] != null; i++) {
+                    if (Withelist.addPlayer(UUIDLibrary.getUUIDtoName(args[i]))) {
+                        cs.sendMessage(new TextComponent("You added " + args[i] + " to the withelist."));
+                    } else {
+                        cs.sendMessage(new TextComponent(args[i] + " is already on the withelist."));
+                    }
                 }
             } else if(args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("rem")) {
-                if(Withelist.removePlayer(UUIDLibrary.getUUIDtoName(args[1]))) {
-                    cs.sendMessage(new TextComponent("You removed " + args[1] + " to the withelist."));
-                } else {
-                    cs.sendMessage(new TextComponent(args[1] + " is not on the withelist."));
+                for(int i = 1; args[i] != null; i++) {
+                    if (Withelist.removePlayer(UUIDLibrary.getUUIDtoName(args[i]))) {
+                        cs.sendMessage(new TextComponent("You removed " + args[i] + " to the withelist."));
+                    } else {
+                        cs.sendMessage(new TextComponent(args[i] + " is not on the withelist."));
+                    }
                 }
             } else {
                 cs.sendMessage(new TextComponent("§cWrong usage: /withelist <enable | disable | status | add [player] | remove [player]>"));
