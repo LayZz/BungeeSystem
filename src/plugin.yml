@@ -3,3 +3,8 @@ author: ohne_beatzz0815
 version: 0.1_Beta
 
 main: de.flashbeatzz.bungeesystem.BungeeSystem
+
+commands:
+  withelist:
+    description: Withelist command.
+    aliases: wl

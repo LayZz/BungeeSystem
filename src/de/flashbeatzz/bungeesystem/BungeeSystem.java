@@ -1,5 +1,8 @@
 package de.flashbeatzz.bungeesystem;
 
+import de.flashbeatzz.bungeesystem.withelist.Withelist;
+import de.flashbeatzz.bungeesystem.withelist.WithelistListener;
+import de.flashbeatzz.bungeesystem.withelist.cmdWithelist;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -41,6 +44,9 @@ public class BungeeSystem extends Plugin {
         }
 
         createTables();
+        getProxy().getPluginManager().registerCommand(this, new cmdWithelist());
+        new Withelist();
+        getProxy().getPluginManager().registerListener(this, new WithelistListener());
 
         try {
             socket = new Socket("localhost", 19888);
@@ -56,26 +62,22 @@ public class BungeeSystem extends Plugin {
     }
 
     public void createTables() {
-        MySQL.createTable("levelsystem", "" +
-                "`id` INT NOT NULL AUTO_INCREMENT," +
-                "`uuid` VARCHAR(100) NOT NULL," +
-                "`level` INT NOT NULL," +
-                "`exp` INT NOT NULL," +
-                "PRIMARY KEY ('id')");
-        MySQL.createTable("guildes", "" +
-                "`id` INT NOT NULL AUTO_INCREMENT," +
-                "`name` VARCHAR(100) NOT NULL," +
-                "`tag` VARCHAR(4) NOT NULL," +
-                "`founder_uuid` VARCHAR(100) NOT NULL," +
-                "`money` DOUBLE NOT NULL," +
-                "PRIMARY KEY ('id')");
-        MySQL.createTable("guilde_members", "" +
-                "`uuid` VARCHAR(100) NOT NULL," +
-                "`guilde_id` INT NOT NULL)");
-        MySQL.createTable("uuid_library", "`id` int(11) NOT NULL AUTO_INCREMENT",
-                "  `uuid` varchar(100) NOT NULL",
-                "  `name` varchar(50) NOT NULL",
-                "  PRIMARY KEY (`id`)");
+        MySQL.createTable("levelsystem", null,
+                "`uuid` text NOT NULL," +
+                "`level` int(11) NOT NULL," +
+                "`exp` int(11) NOT NULL");
+        MySQL.createTable("guildes", "id",
+                "`id` int(11) NOT NULL AUTO_INCREMENT," +
+                "`name` text NOT NULL," +
+                "`tag` text NOT NULL," +
+                "`founder_uuid` text NOT NULL," +
+                "`money` double NOT NULL");
+        MySQL.createTable("guilde_members", null,
+                "`uuid` text NOT NULL," +
+                "`guilde_id` int(11) NOT NULL");
+        MySQL.createTable("uuid_library", null,
+                "`uuid` text NOT NULL," +
+                "`name` text NOT NULL");
     }
 
     public static void sendMessage(String target, String header, String message, boolean sendSelf) {
