@@ -69,15 +69,11 @@ public class MySQL {
         return null;
     }
 
-    public static void createTable(String name, String... columns) {
+    public static void createTable(String name, String primary, String column) {
         Data.console.info("Creating MySQL-Table '" + name + "' ...");
-        String columnString = "";
-        for(String column : columns) {
-            columnString += column + ",";
-        }
-        columnString = columnString.substring(0, columnString.length() - 1);
+        String columnString = primary == null ? column : column + ", PRIMARY KEY (`" + primary + "`)";
 
-        update("CREATE TABLE IF NOT EXISTS `" + name + "` (" + columnString + ") ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;");
+        update("CREATE TABLE IF NOT EXISTS `" + name + "` (" + columnString + ") ENGINE=InnoDB DEFAULT CHARSET=latin1;");
         Data.console.info("Successfully created.");
     }
 }
