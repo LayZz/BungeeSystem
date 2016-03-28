@@ -56,7 +56,7 @@ public class BungeeSystem extends Plugin {
             e.printStackTrace();
         }
 
-        sendMessage(SocketTarget.BUNGEECORD, "CONNECT", "BUNGEECORD", false);
+        sendMessage(SocketTarget.BUNGEECORD, "CONNECT", "BungeeCord", false);
 
         getProxy().getPluginManager().registerListener(this, new UUIDLibrary());
     }
