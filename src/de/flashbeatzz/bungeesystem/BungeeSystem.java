@@ -1,5 +1,7 @@
 package de.flashbeatzz.bungeesystem;
 
+import de.flashbeatzz.bungeesystem.messages.Message;
+import de.flashbeatzz.bungeesystem.messages.Messages;
 import de.flashbeatzz.bungeesystem.whitelist.Whitelist;
 import de.flashbeatzz.bungeesystem.whitelist.WhitelistListener;
 import de.flashbeatzz.bungeesystem.whitelist.cmdWhitelist;
@@ -9,6 +11,8 @@ import net.md_5.bungee.api.plugin.Plugin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class BungeeSystem extends Plugin {
 
@@ -44,6 +48,7 @@ public class BungeeSystem extends Plugin {
         }
 
         createTables();
+        initMessages();
         getProxy().getPluginManager().registerCommand(this, new cmdWhitelist());
         new Whitelist();
         getProxy().getPluginManager().registerListener(this, new WhitelistListener());
@@ -78,6 +83,25 @@ public class BungeeSystem extends Plugin {
         MySQL.createTable("uuid_library", null,
                 "`uuid` text NOT NULL," +
                 "`name` text NOT NULL");
+        MySQL.createTable("messages", "tag",
+                "`tag` VARCHAR(20) NOT NULL," +
+                "`german` VARCHAR(100) NOT NULL," +
+                "`english` VARCHAR(100) NOT NULL");
+    }
+
+    private void initMessages() {
+        ResultSet resultSet = MySQL.query("SELECT * FROM `messages`");
+        try {
+            while (resultSet.next()) {
+                String tag = resultSet.getString("tag");
+                String german = resultSet.getString("german");
+                String english = resultSet.getString("english");
+
+                Messages.messages.put(tag, new Message(tag, german, english));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void sendMessage(String target, String header, String message, boolean sendSelf) {
