@@ -94,7 +94,7 @@ public class BungeeSystem extends Plugin {
                 "`id` int(11) NOT NULL AUTO_INCREMENT," +
                 "`uuid` text NOT NULL," +
                 "`name` text NOT NULL," +
-                "`money` double NOT NULL," +
+                "`money` int(11) NOT NULL," +
                 "`guilde_id` int(11) NOT NULL," +
                 "`level` int(11) NOT NULL," +
                 "`exp` int(11) NOT NULL");
