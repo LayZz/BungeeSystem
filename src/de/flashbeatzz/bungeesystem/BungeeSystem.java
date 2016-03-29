@@ -1,5 +1,6 @@
 package de.flashbeatzz.bungeesystem;
 
+import com.google.common.collect.Lists;
 import de.flashbeatzz.bungeesystem.messages.Message;
 import de.flashbeatzz.bungeesystem.messages.Messages;
 import de.flashbeatzz.bungeesystem.whitelist.Whitelist;
@@ -42,6 +43,12 @@ public class BungeeSystem extends Plugin {
         Data.mysqlCfg.addDefault("MySQL.Port", 3306);
         Data.mysqlCfg.copyAndSave(true);
 
+        Data.whitelist = new Config("withelist", getDataFolder().getName());
+        Data.whitelist.addDefault("enabled", false);
+        Data.whitelist.addDefault("message", "You are not whitelisted!");
+        Data.whitelist.addDefault("players", Lists.newArrayList());
+        Data.whitelist.copyAndSave(true);
+
         Data.mySQL = new MySQL();
         if(!Data.mySQL.openConnection()) {
             BungeeCord.getInstance().stop("MySQL-Connection failed!");
@@ -67,22 +74,30 @@ public class BungeeSystem extends Plugin {
     }
 
     public void createTables() {
-        MySQL.createTable("levelsystem", null,
+        /*MySQL.createTable("levelsystem", null,
                 "`uuid` text NOT NULL," +
                 "`level` int(11) NOT NULL," +
-                "`exp` int(11) NOT NULL");
+                "`exp` int(11) NOT NULL");*/
         MySQL.createTable("guildes", "id",
                 "`id` int(11) NOT NULL AUTO_INCREMENT," +
                 "`name` text NOT NULL," +
                 "`tag` text NOT NULL," +
                 "`founder_uuid` text NOT NULL," +
                 "`money` double NOT NULL");
-        MySQL.createTable("guilde_members", null,
+        /*MySQL.createTable("guilde_members", null,
                 "`uuid` text NOT NULL," +
                 "`guilde_id` int(11) NOT NULL");
         MySQL.createTable("uuid_library", null,
                 "`uuid` text NOT NULL," +
-                "`name` text NOT NULL");
+                "`name` text NOT NULL");*/
+        MySQL.createTable("userdata", "id",
+                "`id` int(11) NOT NULL AUTO_INCREMENT," +
+                "`uuid` text NOT NULL," +
+                "`name` text NOT NULL," +
+                "`money` double NOT NULL," +
+                "`guilde_id` int(11) NOT NULL," +
+                "`level` int(11) NOT NULL," +
+                "`exp` int(11) NOT NULL");
         MySQL.createTable("messages", "tag",
                 "`tag` VARCHAR(20) NOT NULL," +
                 "`german` VARCHAR(100) NOT NULL," +
@@ -90,12 +105,12 @@ public class BungeeSystem extends Plugin {
     }
 
     private void initMessages() {
-        ResultSet resultSet = MySQL.query("SELECT * FROM `messages`");
+        ResultSet rs = MySQL.query("SELECT * FROM `messages`");
         try {
-            while (resultSet.next()) {
-                String tag = resultSet.getString("tag");
-                String german = resultSet.getString("german");
-                String english = resultSet.getString("english");
+            while (rs != null && rs.next()) {
+                String tag = rs.getString("tag");
+                String german = rs.getString("german");
+                String english = rs.getString("english");
 
                 Messages.messages.put(tag, new Message(tag, german, english));
             }

@@ -1,43 +1,16 @@
 package de.flashbeatzz.bungeesystem.whitelist;
 
-import com.google.common.collect.Lists;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
+import de.flashbeatzz.bungeesystem.Data;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class Whitelist {
-    private static Configuration c;
-    private static File f;
-
-    public Whitelist() {
-        try {
-            f = new File("", "whitelist.yml");
-            if(!f.exists()) f.createNewFile();
-            c = ConfigurationProvider.getProvider(YamlConfiguration.class).load(f);
-            if(c.get("enabled") == null) {
-                c.set("enabled", false);
-            }
-            if(c.get("messsage") == null) {
-                c.set("message", "You are not whitelisted.");
-            }
-            if(c.get("players") == null) {
-                c.set("players", Lists.newArrayList());
-            }
-            saveFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static Boolean enable() {
         if(!status()) {
-            c.set("enabled", true);
+            Data.whitelist.getYamlConfiguration().set("enabled", true);
             return true;
         }
         return false;
@@ -45,29 +18,29 @@ public class Whitelist {
 
     public static Boolean disable() {
         if(status()) {
-            c.set("enabled", false);
+            Data.whitelist.getYamlConfiguration().set("enabled", false);
             return true;
         }
         return false;
     }
 
     public static Boolean addPlayer(UUID uuid) {
-        List<String> list = c.getStringList("players");
+        List<String> list = Data.whitelist.getYamlConfiguration().getStringList("players");
         if(!list.contains(uuid.toString())) {
             list.add(uuid.toString());
-            c.set("players", list);
-            saveFile();
+            Data.whitelist.getYamlConfiguration().set("players", list);
+            Data.whitelist.copyAndSave(true);
             return true;
         }
         return false;
     }
 
     public static Boolean removePlayer(UUID uuid) {
-        List<String> list = c.getStringList("players");
+        List<String> list = Data.whitelist.getYamlConfiguration().getStringList("players");
         if(list.contains(uuid.toString())) {
             list.remove(uuid.toString());
-            c.set("players", list);
-            saveFile();
+            Data.whitelist.getYamlConfiguration().set("players", list);
+            Data.whitelist.copyAndSave(true);
             return true;
         }
         return false;
@@ -75,30 +48,22 @@ public class Whitelist {
 
     public static List<UUID> getWhitelisted() {
         List<UUID> list = new ArrayList<>();
-        for(String str : c.getStringList("players")) {
+        for(String str : Data.whitelist.getYamlConfiguration().getStringList("players")) {
             list.add(UUID.fromString(str));
         }
         return list;
     }
 
     public static String getDisconnectMessage() {
-        return c.getString("message");
+        return Data.whitelist.getYamlConfiguration().getString("message");
     }
 
     public static void setDisconnectMessage(String msg) {
-        c.set("message", msg);
+        Data.whitelist.getYamlConfiguration().set("message", msg);
     }
 
     public static Boolean status() {
-        return c.getBoolean("enabled");
-    }
-
-    public static void saveFile() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(c, f);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return Data.whitelist.getYamlConfiguration().getBoolean("enabled");
     }
 
 }
