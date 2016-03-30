@@ -83,7 +83,7 @@ public class BungeeSystem extends Plugin {
                 "`name` text NOT NULL," +
                 "`tag` text NOT NULL," +
                 "`founder_uuid` text NOT NULL," +
-                "`money` double NOT NULL");
+                "`gold` double NOT NULL");
         /*MySQL.createTable("guilde_members", null,
                 "`uuid` text NOT NULL," +
                 "`guilde_id` int(11) NOT NULL");
