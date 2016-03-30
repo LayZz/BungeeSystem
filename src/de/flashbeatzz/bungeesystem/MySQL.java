@@ -50,13 +50,15 @@ public class MySQL {
         return false;
     }
 
-    public static void update(String query) {
+    public static Boolean update(String query) {
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.executeUpdate(query);
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public static ResultSet query(String query) {

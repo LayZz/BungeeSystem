@@ -78,7 +78,7 @@ public class BungeeSystem extends Plugin {
                 "`uuid` text NOT NULL," +
                 "`level` int(11) NOT NULL," +
                 "`exp` int(11) NOT NULL");*/
-        MySQL.createTable("guildes", "id",
+        MySQL.createTable("guilds", "id",
                 "`id` int(11) NOT NULL AUTO_INCREMENT," +
                 "`name` text NOT NULL," +
                 "`tag` text NOT NULL," +
@@ -95,7 +95,7 @@ public class BungeeSystem extends Plugin {
                 "`uuid` text NOT NULL," +
                 "`name` text NOT NULL," +
                 "`money` int(11) NOT NULL," +
-                "`guilde_id` int(11) NOT NULL," +
+                "`guild_id` int(11) NOT NULL," +
                 "`level` int(11) NOT NULL," +
                 "`exp` int(11) NOT NULL");
         MySQL.createTable("messages", "tag",
