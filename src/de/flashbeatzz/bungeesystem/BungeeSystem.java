@@ -92,6 +92,16 @@ public class BungeeSystem extends Plugin {
                 "`tag` VARCHAR(20) NOT NULL," +
                 "`german` VARCHAR(100) NOT NULL," +
                 "`english` VARCHAR(100) NOT NULL");
+        MySQL.createTable("currency_logs", "id",
+                "`id` INT NOT NULL AUTO_INCREMENT," +
+                "`user_id` VARCHAR(50) NOT NULL," +
+                "`amount` INT NOT NULL," +
+                "`time` DATETIME NOT NULL," +
+                "`description` VARCHAR(100) NOT NULL," +
+                "`server_name` VARCHAR(50) NOT NULL," +
+                "`class_package` VARCHAR(100) NOT NULL," +
+                "`old_amount` INT NOT NULL," +
+                "`new_amount` INT NOT NULL");
     }
 
     private void initMessages() {
